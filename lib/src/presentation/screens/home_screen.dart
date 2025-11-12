@@ -30,12 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primaryAccent,
         centerTitle: false,
-        title: Text(
-          'Markets',
-          style: AppTextStyle.h2(size: 24.sp, color: AppColors.secondaryColor),
-        ),
+        title: Text('Markets', style: AppTextStyle.h2(size: 24.sp)),
       ),
       body: Obx(() {
         if (_appController.isLoading.value) return LoadingView();
@@ -53,14 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
         return RefreshIndicator(
           onRefresh: _appController.refreshMarkets,
-          color: AppColors.primaryAccent,
           child: CustomScrollView(
             slivers: [
               //----- TOP FIXED SECTION -----
               SliverToBoxAdapter(
                 child: Container(
                   width: double.infinity,
-                  color: AppColors.primaryAccent.withValues(alpha: 0.15),
                   padding: EdgeInsets.symmetric(
                     horizontal: 16.w,
                     vertical: 10.h,
@@ -70,18 +64,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         "Top Gainers Today",
-                        style: AppTextStyle.medium(
-                          size: 16.sp,
-                          color: AppColors.textColor,
-                        ),
+                        style: AppTextStyle.medium(size: 16.sp),
                       ),
                       SizedBox(height: 6.h),
                       Text(
                         "These coins have shown the highest 24h growth",
-                        style: AppTextStyle.regular(
-                          size: 12.sp,
-                          color: Colors.grey,
-                        ),
+                        style: AppTextStyle.regular(size: 12.sp),
                       ),
                     ],
                   ),
@@ -108,14 +96,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             coin.marketCapRank.toString(),
                             style: AppTextStyle.regular(size: 13.sp),
                           ),
-                          SizedBox(width: 20.w),
+                          SizedBox(width: 15.w),
                           ClipOval(
                             child: CachedNetworkImage(
                               imageUrl: coin.image,
                               height: 36.w,
                               width: 36.w,
                               placeholder: (_, __) => const CircleAvatar(
-                                backgroundColor:  AppColors.secondaryAccent,
+                                backgroundColor: AppColors.secondaryAccent,
                               ),
                               errorWidget: (_, __, ___) =>
                                   const Icon(Icons.error),
@@ -128,10 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Text(
                                   coin.symbol.toUpperCase(),
-                                  style: AppTextStyle.medium(
-                                    size: 15.sp,
-                                    color: AppColors.textColor,
-                                  ),
+                                  style: AppTextStyle.semiBold(size: 15.sp),
                                 ),
                                 Text(
                                   "\$${AppFormatter.formatCompactNumber(coin.marketCap)}",
@@ -145,10 +130,27 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Text(
                             "\$${AppFormatter.currency(coin.currentPrice)}",
+                            style: AppTextStyle.regular(size: 14.sp),
+                          ),
+                          SizedBox(width: 30.w),
+                          Text(
+                            '${coin.priceChangePercentage24h.toStringAsFixed(2)}%',
                             style: AppTextStyle.medium(
+                              color: coin.priceChangePercentage24h > 0
+                                  ? AppColors.positiveColor
+                                  : AppColors.negativeColor,
                               size: 14.sp,
-                              color: AppColors.textColor,
                             ),
+                          ),
+                          SizedBox(width: 5.w),
+                          Icon(
+                            coin.priceChangePercentage24h > 0
+                                ? Icons.trending_up
+                                : Icons.trending_down,
+                            color: coin.priceChangePercentage24h > 0
+                                ? AppColors.positiveColor
+                                : AppColors.negativeColor,
+                            size: 16.sp,
                           ),
                         ],
                       ),

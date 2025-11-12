@@ -1,3 +1,3 @@
 class AppIcons {
-  static String logo = 'assets/icons/logo.svg';
+  static String error = 'assets/error.png';
 }

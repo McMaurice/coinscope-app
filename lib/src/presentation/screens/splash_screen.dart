@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:coinscope_app/src/core/constants/app_colors.dart';
 import 'package:coinscope_app/src/core/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +23,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -33,31 +31,20 @@ class _SplashScreenState extends State<SplashScreen> {
               height: 90.h,
               width: 90.w,
               decoration: BoxDecoration(
-                color: AppColors.primaryAccent,
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.primaryAccent, width: 2),
+                border: Border.all(width: 2),
               ),
-              child: Icon(
-                Icons.currency_bitcoin,
-                size: 50.sp,
-                color: AppColors.secondaryColor,
-              ),
+              child: Icon(Icons.currency_bitcoin, size: 50.sp),
             ),
             SizedBox(height: 20.h),
             Text(
               "Coin Scope".toUpperCase(),
-              style: AppTextStyle.h1(
-                size: 22.sp,
-                color: AppColors.secondaryColor,
-              ),
+              style: AppTextStyle.h2(size: 24.sp),
             ),
             SizedBox(height: 8.h),
             Text(
-              "An enhanced crypto watch dog",
-              style: AppTextStyle.medium(
-                size: 13.sp,
-                color: AppColors.secondaryColor,
-              ),
+              "Tracking Coins, Tracking Gains",
+              style: AppTextStyle.semiBold(size: 14.sp),
             ),
           ],
         ),

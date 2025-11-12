@@ -20,11 +20,10 @@ class ApiClient {
       '$baseUrl$endpoint',
     ).replace(queryParameters: mergedQuery);
 
-    final response = await http
-        .get(uri, headers: {...defaultHeaders})
-        .timeout(const Duration(seconds: 15));
+    final response = await http.get(uri, headers: {...defaultHeaders});
+    //.timeout(const Duration(seconds: 15));
 
-    //print('GET ${uri.toString()} → ${response.statusCode}');
+  //  print('GET ${uri.toString()} → ${response.statusCode}');
     return _processResponse(response);
   }
 

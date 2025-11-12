@@ -1,10 +1,10 @@
+import 'dart:async';
 import 'package:coinscope_app/src/models/ohlc_model.dart';
 import 'package:coinscope_app/src/models/coin_model.dart';
 import 'package:coinscope_app/src/services/api/api_client.dart';
 import 'package:coinscope_app/src/services/api/api_service.dart';
 import 'package:get/get.dart';
 
-// ----- SUPPLIES DATA FROM API SERVICE TO THE UI AND DB ---
 class AppController extends GetxController {
   var marketList = <CoinModel>[].obs;
   var candleDataList = <OhlcChartModel>[].obs;
@@ -14,18 +14,54 @@ class AppController extends GetxController {
   var hasError = false.obs;
 
   late final ApiService _service;
+  Timer? _marketTimer;
+  final Map<String, DateTime> _lastOhlcFetch = {};
+
+  DateTime? _lastMarketFetch;
 
   @override
   void onInit() {
     super.onInit();
     _service = ApiService(ApiClient());
-    fetchMarkets();
+    _fetchMarketsOnce();
+    _marketTimer = Timer.periodic(Duration(seconds: 60), (_) {
+      refreshMarkets();
+    });
   }
 
-  Future<void> refreshMarkets() async {
+  @override
+  void onClose() {
+    _marketTimer?.cancel();
+    super.onClose();
+  }
+
+  // Fetch markets for the first time
+  Future<void> _fetchMarketsOnce() async {
     await fetchMarkets();
   }
 
+  // Refresh markets with throttling
+  Future<void> refreshMarkets() async {
+    if (_lastMarketFetch != null &&
+        DateTime.now().difference(_lastMarketFetch!).inSeconds < 60) {
+      return;
+    }
+    _lastMarketFetch = DateTime.now();
+
+    try {
+      final data = await _service.getMarkets();
+      for (var coin in data) {
+        final index = marketList.indexWhere((c) => c.id == coin.id);
+        if (index != -1) {
+          marketList[index] = coin;
+        } else {
+          marketList.add(coin);
+        }
+      }
+    } catch (_) {}
+  }
+
+  // Full fetch markets (used on pull-to-refresh)
   Future<void> fetchMarkets() async {
     try {
       isLoading.value = true;
@@ -42,8 +78,15 @@ class AppController extends GetxController {
     }
   }
 
-  // Call this to fetch candlestick data
   Future<void> fetchOhlcChart(String id, int days) async {
+    final now = DateTime.now();
+    if (_lastOhlcFetch[id] != null &&
+        now.difference(_lastOhlcFetch[id]!).inSeconds < 60) {
+      return;
+    }
+
+    _lastOhlcFetch[id] = now;
+
     try {
       isLoading.value = true;
       hasError.value = false;
@@ -61,13 +104,11 @@ class AppController extends GetxController {
 
   double getMinLow(List<OhlcChartModel> data) {
     if (data.isEmpty) return 0;
-    final min = data.map((e) => e.low).reduce((a, b) => a < b ? a : b);
-    return min;
+    return data.map((e) => e.low).reduce((a, b) => a < b ? a : b);
   }
 
   double getMaxHigh(List<OhlcChartModel> data) {
     if (data.isEmpty) return 0;
-    final max = data.map((e) => e.high).reduce((a, b) => a > b ? a : b);
-    return max;
+    return data.map((e) => e.high).reduce((a, b) => a > b ? a : b);
   }
 }

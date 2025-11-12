@@ -7,13 +7,13 @@ class AppTheme {
   //----LIGHT THEME-----
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
-    scaffoldBackgroundColor: AppColors.backgroundColor,
-    primaryColor: AppColors.primaryColor,
+    scaffoldBackgroundColor: AppColors.secondaryColor,
+    primaryColor: AppColors.secondaryAccent,
     colorScheme: ColorScheme(
       brightness: Brightness.light,
       primary: AppColors.primaryColor,
       onPrimary: Colors.white,
-      secondary: AppColors.secondaryColor,
+      secondary: AppColors.primaryColor,
       onSecondary: Colors.white,
       error: AppColors.negativeColor,
       onError: Colors.white,
@@ -23,21 +23,24 @@ class AppTheme {
     fontFamily: 'PrimaryFont',
 
     appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.primaryColor,
-      foregroundColor: Colors.white,
+      backgroundColor: AppColors.secondaryColor,
+      foregroundColor: AppColors.primaryAccent,
       elevation: 2,
       centerTitle: true,
-      iconTheme: const IconThemeData(color: Colors.white),
-      titleTextStyle: AppTextStyle.h2(color: Colors.white, size: 20.sp),
+      iconTheme: const IconThemeData(color: AppColors.primaryAccent),
+      titleTextStyle: AppTextStyle.h2(
+        color: AppColors.primaryAccent,
+        size: 20.sp,
+      ),
     ),
 
     cardTheme: CardThemeData(
-      color: AppColors.cardColor,
+      color: AppColors.secondaryColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         side: BorderSide(
-          color: AppColors.dividerColor.withValues(alpha: 0.2),
-          width: 1,
+          color: AppColors.secondaryAccent.withValues(alpha: 0.2),
+          width: 1.w,
         ),
       ),
       elevation: 2,
@@ -45,14 +48,14 @@ class AppTheme {
       shadowColor: Colors.black.withValues(alpha: 0.2),
     ),
 
-    iconTheme: IconThemeData(color: AppColors.primaryAccent, size: 22.sp),
+    iconTheme: IconThemeData(color: AppColors.primaryColor, size: 22.sp),
 
     textTheme: TextTheme(
-      headlineLarge: AppTextStyle.h1(color: AppColors.textColor),
-      headlineMedium: AppTextStyle.h2(color: AppColors.textColor),
-      titleLarge: AppTextStyle.h2(color: AppColors.textColor),
-      bodyLarge: AppTextStyle.medium(color: AppColors.textColor),
-      bodyMedium: AppTextStyle.regular(color: AppColors.textColor),
+      headlineLarge: AppTextStyle.h1(color: AppColors.primaryColor),
+      headlineMedium: AppTextStyle.h2(color: AppColors.primaryColor),
+      titleLarge: AppTextStyle.h2(color: AppColors.primaryColor),
+      bodyLarge: AppTextStyle.medium(color: AppColors.primaryColor),
+      bodyMedium: AppTextStyle.regular(color: AppColors.primaryColor),
       bodySmall: AppTextStyle.caption(
         color: AppColors.textColor.withValues(alpha: 0.6),
       ),
@@ -60,72 +63,89 @@ class AppTheme {
 
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white,
-      hintStyle: AppTextStyle.regular(
-        color: AppColors.textColor.withValues(alpha: 0.6),
-      ),
+      fillColor: AppColors.primaryColor.withValues(alpha: 0.6),
+      hintStyle: AppTextStyle.regular(color: AppColors.secondaryColor),
       border: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.dividerColor),
-        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(
+          color: AppColors.primaryColor..withValues(alpha: 0.6),
+        ),
+        borderRadius: BorderRadius.circular(8.r),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5.w),
-        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(color: AppColors.primaryAccent, width: 1.5.w),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+    ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.secondaryAccent,
+        foregroundColor: AppColors.primaryColor,
+        textStyle: AppTextStyle.semiBold(
+          size: 16.sp,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
+      ),
+    ),
+
+    dividerTheme: DividerThemeData(
+      color: AppColors.primaryAccent,
+      thickness: 1,
+    ),
+  );
+
+  //---DARK THEME-----
+  static final darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: AppColors.primaryAccent.withValues(alpha: 5.0),
+    primaryColor: AppColors.primaryAccent.withValues(alpha: 5.0),
+    colorScheme: ColorScheme.dark(
+      primary: AppColors.secondaryAccent,
+      secondary: AppColors.primaryAccent,
+      surface: const Color(0xFF1A1A1C),
+      onSurface: AppColors.secondaryAccent,
+      error: AppColors.negativeColor,
+      onError: AppColors.secondaryAccent,
+    ),
+    fontFamily: 'PrimaryFont',
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.primaryColor.withValues(alpha: 1),
+      titleTextStyle: AppTextStyle.h2(size: 20.sp),
+      iconTheme: const IconThemeData(color: AppColors.secondaryAccent),
+      elevation: 1,
+      centerTitle: true,
+    ),
+    cardTheme: CardThemeData(
+      color: AppColors.primaryAccent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12.r)),
+      ),
+      elevation: 2,
+    ),
+    iconTheme: IconThemeData(color: AppColors.secondaryAccent, size: 22.sp),
+    textTheme: TextTheme(
+      headlineLarge: AppTextStyle.h1(color: AppColors.secondaryColor),
+      headlineMedium: AppTextStyle.h2(color: AppColors.secondaryColor),
+      titleLarge: AppTextStyle.h2(color: AppColors.secondaryColor),
+      bodyLarge: AppTextStyle.medium(color: AppColors.secondaryColor),
+      bodyMedium: AppTextStyle.regular(color: AppColors.secondaryAccent),
+      bodySmall: AppTextStyle.caption(
+        color: AppColors.secondaryAccent.withValues(alpha: 0.7),
       ),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,
-        foregroundColor: Colors.white,
-        textStyle: AppTextStyle.semiBold(color: Colors.white, size: 16.sp),
+        foregroundColor: AppColors.secondaryAccent,
+        textStyle: AppTextStyle.semiBold(size: 16.sp),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 24.w),
-      ),
-    ),
-
-    dividerTheme: DividerThemeData(color: AppColors.dividerColor, thickness: 1),
-  );
-
-  //---DARK THEME-----
-  static final darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    scaffoldBackgroundColor: const Color(0xFF0E0E10),
-    primaryColor: AppColors.primaryColor,
-    colorScheme: ColorScheme.dark(
-      primary: AppColors.primaryColor,
-      secondary: AppColors.secondaryColor,
-      surface: const Color(0xFF1A1A1C),
-      onSurface: Colors.white,
-      error: AppColors.negativeColor,
-      onError: Colors.white,
-    ),
-    fontFamily: 'PrimaryFont',
-    appBarTheme: AppBarTheme(
-      backgroundColor: const Color(0xFF1A1A1C),
-      titleTextStyle: AppTextStyle.h2(color: Colors.white, size: 20.sp),
-      iconTheme: const IconThemeData(color: Colors.white),
-      elevation: 1,
-      centerTitle: true,
-    ),
-    cardTheme: CardThemeData(
-      color: const Color(0xFF1A1A1C),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12.r)),
-      ),
-      elevation: 2,
-    ),
-    iconTheme: IconThemeData(color: AppColors.primaryAccent, size: 22.sp),
-    textTheme: TextTheme(
-      headlineLarge: AppTextStyle.h1(color: Colors.white),
-      headlineMedium: AppTextStyle.h2(color: Colors.white),
-      titleLarge: AppTextStyle.h2(color: Colors.white),
-      bodyLarge: AppTextStyle.medium(color: Colors.white),
-      bodyMedium: AppTextStyle.regular(color: Colors.white),
-      bodySmall: AppTextStyle.caption(
-        color: Colors.white.withValues(alpha: 0.7),
       ),
     ),
   );
