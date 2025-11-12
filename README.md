@@ -1,7 +1,3 @@
-Here’s a clean, professional README for your Coinscope project based on your description:
-
----
-
 # Coinscope
 
 Coinscope is a cross-platform crypto wallet and market tracker that fetches real-time cryptocurrency data from the CoinGecko API. It provides detailed coin information, price charts, offline caching, and user-friendly notifications for network status. The app supports both light and dark themes.
