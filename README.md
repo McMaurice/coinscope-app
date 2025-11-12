@@ -57,8 +57,8 @@ https://drive.google.com/drive/folders/1sA1EmVjaWuLGMFzwgWnmw-eIjXx9Tq_4?usp=sha
 
 ## Screenshots
 
-<img width="200" height="550" " alt="Screenshot_1762958394" src="https://github.com/user-attachments/assets/dc393828-70c9-4eb0-9162-b66f18018931" />
-<img width="200" height="550" alt="Screenshot_1762958384" src="https://github.com/user-attachments/assets/e9efdc9d-bdc2-40ba-bb52-7d5355a4cd0f" />
+<img width="200" height="550"  alt="Screenshot_1762958394" src="https://github.com/user-attachments/assets/06490438-750e-497b-9cc6-48fd0b5ceae1" />
+<img width="200" height="550"  alt="Screenshot_1762958384" src="https://github.com/user-attachments/assets/17cf5a3f-2a46-4d70-be0c-9bfb69ade214" />
 
 
 
