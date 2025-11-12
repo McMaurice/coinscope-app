@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           title: 'Coin Scope',
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.system,
+          themeMode: ThemeMode.dark,
         );
       },
     );

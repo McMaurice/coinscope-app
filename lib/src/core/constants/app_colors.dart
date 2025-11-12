@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   //---- Main identity colors ----
-  static const Color primaryColor = Color(0xFF011434);
-  static const Color primaryAccent = Color(0xFF052B6D);
+  static const Color primaryColor = Color(0xFF052B6D);
+  static const Color primaryAccent = Color.fromARGB(255, 3, 3, 26);
 
   //---- Supporting tones ----
   static const Color secondaryColor = Color(0xFFF3F5F6);
@@ -16,7 +16,8 @@ class AppColors {
   static const Color dividerColor = Color(0xFFE5E7EB);
 
   //---- Status ------
-  static const Color positiveColor = Color(0xFF22C55E);
-  static const Color negativeColor = Color(0xFFEF4444);
+  static const Color positiveColor = Color(0xFF4CAF50);
+  static const Color negativeColor = Color(0xFFF44336);
+
   static const Color warningColor = Color(0xFFFACC15);
 }

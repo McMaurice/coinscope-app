@@ -1,4 +1,5 @@
 import 'package:coinscope_app/src/core/constants/app_colors.dart';
+import 'package:coinscope_app/src/core/constants/app_icons.dart';
 import 'package:coinscope_app/src/core/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,8 +15,10 @@ class ErrorView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Image.asset(AppIcons.error, width: 250.w, height: 250.h),
+          SizedBox(height: 30),
           Text(
-            "An internet error occurred, please try again",
+            "There has been an internet Error \n Please Try again!",
             textAlign: TextAlign.center,
             style: AppTextStyle.regular(size: 14.sp, color: Colors.red),
           ),
@@ -23,7 +26,7 @@ class ErrorView extends StatelessWidget {
           ElevatedButton(
             onPressed: callBack,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryAccent,
+              backgroundColor: AppColors.secondaryAccent,
             ),
             child: Text(
               "Retry",

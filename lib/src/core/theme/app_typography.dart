@@ -1,4 +1,3 @@
-import 'package:coinscope_app/src/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,21 +8,21 @@ class AppTextStyle {
   static TextStyle currency({Color? color, double? size}) => TextStyle(
     fontSize: size ?? 24.sp,
     fontWeight: FontWeight.w400,
-    color: color ?? AppColors.primaryColor,
+    color: color,
     fontFamily: _secondaryFont,
   );
 
   static TextStyle h1({Color? color, double? size}) => TextStyle(
     fontSize: size ?? 60.sp,
     fontWeight: FontWeight.w600,
-    color: color ?? AppColors.primaryColor,
+    color: color,
     fontFamily: _secondaryFont,
   );
 
   static TextStyle h2({Color? color, double? size}) => TextStyle(
     fontSize: size ?? 40.sp,
     fontWeight: FontWeight.w500,
-    color: color ?? AppColors.primaryColor,
+    color: color,
     fontFamily: _secondaryFont,
   );
 
@@ -31,21 +30,21 @@ class AppTextStyle {
   static TextStyle semiBold({Color? color, double? size}) => TextStyle(
     fontSize: size ?? 20.sp,
     fontWeight: FontWeight.w600,
-    color: color ?? AppColors.textColor,
+    color: color,
     fontFamily: _primaryFont,
   );
 
   static TextStyle medium({Color? color, double? size}) => TextStyle(
     fontSize: size ?? 16.sp,
     fontWeight: FontWeight.w500,
-    color: color ?? AppColors.textColor,
+    color: color,
     fontFamily: _primaryFont,
   );
 
   static TextStyle regular({Color? color, double? size}) => TextStyle(
     fontSize: size ?? 14.sp,
     fontWeight: FontWeight.w400,
-    color: color ?? AppColors.textColor,
+    color: color,
     fontFamily: _primaryFont,
   );
 
@@ -53,7 +52,7 @@ class AppTextStyle {
       TextStyle(
         fontSize: size ?? 14.sp,
         fontWeight: FontWeight.w300,
-        color: (color ?? AppColors.textColor).withValues(alpha: opacity),
+        color: color!.withValues(alpha: opacity),
         fontFamily: _primaryFont,
       );
 
@@ -64,7 +63,7 @@ class AppTextStyle {
   }) => TextStyle(
     fontSize: size ?? 12.sp,
     fontWeight: FontWeight.w500,
-    color: (color ?? AppColors.textColor).withValues(alpha: opacity),
+    color: color!.withValues(alpha: opacity),
     fontFamily: _primaryFont,
   );
 
@@ -72,7 +71,7 @@ class AppTextStyle {
       TextStyle(
         fontSize: size ?? 10.sp,
         fontWeight: FontWeight.w400,
-        color: (color ?? AppColors.textColor).withValues(alpha: opacity),
+        color: color!.withValues(alpha: opacity),
         fontFamily: _primaryFont,
       );
 }

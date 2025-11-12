@@ -1,17 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coinscope_app/src/core/utilities/formatters.dart';
-import 'package:coinscope_app/src/domain/getx%20manager/market_controller.dart';
-import 'package:coinscope_app/src/models/ohlc_model.dart';
 import 'package:coinscope_app/src/models/coin_model.dart';
-import 'package:coinscope_app/src/presentation/shared/error_view.dart';
-import 'package:coinscope_app/src/presentation/shared/loading_view.dart';
+import 'package:coinscope_app/src/presentation/shared/coin_infocard.dart';
+import 'package:coinscope_app/src/presentation/shared/ohlc_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coinscope_app/src/core/constants/app_colors.dart';
 import 'package:coinscope_app/src/core/theme/app_typography.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key, required this.coin});
@@ -22,30 +17,17 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  final AppController _appController = Get.find<AppController>();
-
-  late TrackballBehavior _trackballBehavior;
-
-  @override
-  void initState() {
-    super.initState();
-    _appController.fetchOhlcChart(widget.coin.id, 1);
-    _trackballBehavior = TrackballBehavior(
-      enable: true,
-      activationMode: ActivationMode.singleTap,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final coin = widget.coin;
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         title: Row(
           children: [
             ClipOval(
               child: CachedNetworkImage(
-                imageUrl: widget.coin.image,
+                imageUrl: coin.image,
                 height: 30.h,
                 width: 30.w,
                 placeholder: (_, __) => const CircleAvatar(
@@ -56,122 +38,161 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
             SizedBox(width: 8.w),
             Text(
-              widget.coin.symbol.toUpperCase(),
-              style: AppTextStyle.semiBold(size: 14.sp, color: Colors.white),
+              coin.symbol.toUpperCase(),
+              style: AppTextStyle.semiBold(size: 14.sp),
             ),
-            SizedBox(width: 4.w),
+            SizedBox(width: 5.w),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 5.h),
+              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
               decoration: BoxDecoration(
-                color: AppColors.secondaryAccent.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(5.sp),
+                color: Theme.of(
+                  context,
+                ).colorScheme.secondary.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(5.r),
               ),
               child: Text(
-                '#${widget.coin.marketCapRank}',
-                style: AppTextStyle.regular(
-                  size: 14.sp,
-                  color: AppColors.secondaryColor,
+                '#${coin.marketCapRank}',
+                style: AppTextStyle.medium(
+                  size: 12.sp,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
           ],
         ),
-        backgroundColor: AppColors.primaryAccent,
-        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.h),
+          child: Container(
+            color: Theme.of(
+              context,
+            ).colorScheme.secondary.withValues(alpha: 0.2),
+            height: 1.h,
+          ),
+        ),
       ),
-      body: Obx(() {
-        if (_appController.isLoading.value) return LoadingView();
-        if (_appController.hasError.value) {
-          return ErrorView(callBack: _appController.fetchMarkets);
-        }
-        if (_appController.marketList.isEmpty) {
-          return Center(
-            child: Text(
-              "No market data available",
-              style: AppTextStyle.regular(size: 14.sp),
-            ),
-          );
-        }
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        //TODO
+        child: Icon(
+          Icons.favorite_outline_outlined,
+          size: 24.sp,
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(14.sp),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 5.h),
+            Text(coin.name, style: AppTextStyle.semiBold(size: 16.sp)),
+            SizedBox(height: 5.h),
 
-        return SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(10.sp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            // ---- PRICE SECTION ----
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Text(
+                  "\$${AppFormatter.currency(coin.currentPrice)}",
+                  style: AppTextStyle.h1(size: 25.sp),
+                ),
+                SizedBox(width: 8.w),
+                Row(
                   children: [
                     Text(
-                      widget.coin.name,
-                      style: AppTextStyle.semiBold(size: 14.sp),
+                      '${coin.priceChangePercentage24h.toStringAsFixed(2)}%',
+                      style: AppTextStyle.medium(
+                        size: 14.sp,
+                        color: coin.priceChangePercentage24h >= 0
+                            ? AppColors.positiveColor
+                            : AppColors.negativeColor,
+                      ),
                     ),
-                    Text(
-                      "\$${AppFormatter.formatCompactNumber(widget.coin.currentPrice)}",
-                      style: AppTextStyle.h1(size: 20.sp),
+                    SizedBox(width: 4.w),
+                    Icon(
+                      coin.priceChangePercentage24h >= 0
+                          ? Icons.trending_up
+                          : Icons.trending_down,
+                      color: coin.priceChangePercentage24h >= 0
+                          ? AppColors.positiveColor
+                          : AppColors.negativeColor,
+                      size: 16.sp,
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
-                SizedBox(
-                  height: 250.h,
-                  child: SfCartesianChart(
-                    title: ChartTitle(
-                      text: widget.coin.name,
-                      textStyle: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      alignment: ChartAlignment.near,
+              ],
+            ),
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.secondary.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(5.r),
+                  ),
+                  child: Text(
+                    '24H',
+                    style: AppTextStyle.medium(
+                      size: 12.sp,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                    backgroundColor: AppColors.secondaryAccent,
-                    plotAreaBorderWidth: 0, // remove border for clean look
-                    trackballBehavior: _trackballBehavior,
-                    tooltipBehavior: TooltipBehavior(
-                      enable: true,
-                      header: '',
-                      textStyle: TextStyle(fontSize: 12.sp),
-                    ),
-                    series: <CandleSeries>[
-                      CandleSeries<OhlcChartModel, DateTime>(
-                        dataSource: _appController.candleDataList,
-                        xValueMapper: (OhlcChartModel sales, _) =>
-                            DateTime.fromMillisecondsSinceEpoch(sales.timestamp),
-                        lowValueMapper: (OhlcChartModel sales, _) => sales.low,
-                        highValueMapper: (OhlcChartModel sales, _) => sales.high,
-                        openValueMapper: (OhlcChartModel sales, _) => sales.open,
-                        closeValueMapper: (OhlcChartModel sales, _) =>
-                            sales.close,
-                        enableSolidCandles: true,
-                      ),
-                    ],
-                    primaryXAxis: DateTimeAxis(
-                      dateFormat: DateFormat.Hm(),
-                      labelStyle: AppTextStyle.regular(size: 10.sp),
-                      axisLine: AxisLine(color: Colors.transparent),
-                    ),
-                    primaryYAxis: NumericAxis(
-                      minimum: _appController.getMinLow(
-                        _appController.candleDataList,
-                      ),
-                      maximum: _appController.getMaxHigh(
-                        _appController.candleDataList,
-                      ),
-                      numberFormat: NumberFormat.simpleCurrency(decimalDigits: 0),
-                      majorGridLines: MajorGridLines(
-                        color: Colors.grey[800],
-                        dashArray: [4, 4],
-                      ),
-                      axisLine: AxisLine(color: Colors.transparent),
-                      labelStyle: AppTextStyle.regular(size: 10.sp),
-                    ),
+                  ),
+                ),
+                SizedBox(width: 5.h),
+                Text(
+                  "\$${AppFormatter.currency(coin.priceChange24h)}",
+                  style: AppTextStyle.semiBold(
+                    size: 20.sp,
+                    color: coin.priceChangePercentage24h >= 0
+                        ? AppColors.positiveColor
+                        : AppColors.negativeColor,
                   ),
                 ),
               ],
             ),
-          ),
-        );
-      }),
+            OhlcGraph(coin: coin),
+            SizedBox(height: 20.h),
+            Text('Info', style: AppTextStyle.medium(size: 14.sp)),
+            SizedBox(height: 8.h),
+            Column(
+              children: [
+                BorderedTwoColumn(
+                  title: "Market Cap",
+                  description: "\$${AppFormatter.currency(coin.marketCap)}",
+                ),
+                SizedBox(height: 8.h),
+                BorderedTwoColumn(
+                  title: "Fully Diluted Valuation",
+                  description:
+                      "\$${AppFormatter.currency(coin.fullyDilutedValuation)}",
+                ),
+                SizedBox(height: 8.h),
+                BorderedTwoColumn(
+                  title: "Total Volum",
+                  description: AppFormatter.currency(coin.totalVolume),
+                ),
+                SizedBox(height: 8.h),
+                BorderedTwoColumn(
+                  title: "Total Supply",
+                  description: AppFormatter.currency(coin.totalSupply),
+                ),
+                SizedBox(height: 8.h),
+                BorderedTwoColumn(
+                  title: "Circulating Supply",
+                  description: AppFormatter.currency(coin.circulatingSupply),
+                ),
+                SizedBox(height: 8.h),
+                BorderedTwoColumn(
+                  title: "Max Supply",
+                  description: AppFormatter.currency(coin.maxSupply),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
