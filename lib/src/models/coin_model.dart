@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:drift/drift.dart' as drift;
+import 'package:coinscope_app/src/data/local/database.dart';
 
 class CoinModel {
   final String id;
@@ -56,5 +58,46 @@ class CoinModel {
   static List<CoinModel> listFromJson(String str) {
     final data = jsonDecode(str) as List<dynamic>;
     return data.map((item) => CoinModel.fromJson(item)).toList();
+  }
+
+  factory CoinModel.fromDb(CoinsEntityData e) {
+    return CoinModel(
+      id: e.id,
+      symbol: e.symbol,
+      name: e.name,
+      image: e.image,
+      currentPrice: e.currentPrice,
+      marketCap: e.marketCap,
+      marketCapRank: e.marketCapRank,
+      fullyDilutedValuation: e.fullyDilutedValuation,
+      totalVolume: e.totalVolume,
+      priceChange24h: e.priceChange24h,
+      priceChangePercentage24h: e.priceChangePercentage24h,
+      circulatingSupply: e.circulatingSupply,
+      totalSupply: e.totalSupply,
+      maxSupply: e.maxSupply,
+    );
+  }
+}
+
+// Extension to convert CoinModel to Drift companion
+extension CoinModelMapper on CoinModel {
+  CoinsEntityCompanion toDb() {
+    return CoinsEntityCompanion(
+      id: drift.Value(id),
+      symbol: drift.Value(symbol),
+      name: drift.Value(name),
+      image: drift.Value(image),
+      currentPrice: drift.Value(currentPrice),
+      marketCap: drift.Value(marketCap),
+      marketCapRank: drift.Value(marketCapRank),
+      fullyDilutedValuation: drift.Value(fullyDilutedValuation),
+      totalVolume: drift.Value(totalVolume),
+      priceChange24h: drift.Value(priceChange24h),
+      priceChangePercentage24h: drift.Value(priceChangePercentage24h),
+      circulatingSupply: drift.Value(circulatingSupply),
+      totalSupply: drift.Value(totalSupply),
+      maxSupply: drift.Value(maxSupply),
+    );
   }
 }

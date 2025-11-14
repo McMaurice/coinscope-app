@@ -3,7 +3,6 @@ import 'package:coinscope_app/src/core/constants/app_colors.dart';
 import 'package:coinscope_app/src/core/theme/app_typography.dart';
 import 'package:coinscope_app/src/core/utilities/formatters.dart';
 import 'package:coinscope_app/src/domain/getx%20manager/market_controller.dart';
-import 'package:coinscope_app/src/presentation/shared/error_view.dart';
 import 'package:coinscope_app/src/presentation/shared/loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,9 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Obx(() {
         if (_appController.isLoading.value) return LoadingView();
-        if (_appController.hasError.value) {
-          return ErrorView(callBack: _appController.fetchMarkets);
-        }
         if (_appController.marketList.isEmpty) {
           return Center(
             child: Text(
@@ -71,6 +67,46 @@ class _HomeScreenState extends State<HomeScreen> {
                         "These coins have shown the highest 24h growth",
                         style: AppTextStyle.regular(size: 12.sp),
                       ),
+                      if (_appController.hasError.value)
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: 12.h,
+                            horizontal: 16.w,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 12.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.negativeColor.withValues(
+                              alpha: 0.1,
+                            ),
+                            borderRadius: BorderRadius.circular(8.r),
+                            border: Border.all(
+                              color: AppColors.negativeColor,
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.error_outline,
+                                color: AppColors.negativeColor,
+                                size: 20.sp,
+                              ),
+                              SizedBox(width: 10.w),
+                              Expanded(
+                                child: Text(
+                                  "There has been an internet error. Please try again.",
+                                  style: AppTextStyle.medium(
+                                    size: 14.sp,
+                                    color: AppColors.negativeColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -82,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   final coin = _appController.marketList[index];
                   return InkWell(
                     onTap: () {
-                      _appController.fetchOhlcChart(coin.id, 1);
+                      _appController.fetchOhlcCharts(coin.id);
                       context.push('/detailScreen', extra: coin);
                     },
                     child: Container(

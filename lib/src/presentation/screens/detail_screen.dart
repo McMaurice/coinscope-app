@@ -17,10 +17,10 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  bool isFav = false;
   @override
   Widget build(BuildContext context) {
     final coin = widget.coin;
-
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -71,12 +71,15 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        //TODO
+        onPressed: () {
+          setState(() {
+            isFav = !isFav;
+          });
+        },
         child: Icon(
-          Icons.favorite_outline_outlined,
+          isFav ? Icons.favorite : Icons.favorite_outline,
           size: 24.sp,
-          color: Theme.of(context).colorScheme.secondary,
+          color: AppColors.negativeColor,
         ),
       ),
       body: SingleChildScrollView(

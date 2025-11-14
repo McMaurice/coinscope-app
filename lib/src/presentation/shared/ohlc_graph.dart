@@ -21,18 +21,10 @@ class OhlcGraph extends StatefulWidget {
 class _OhlcGraphState extends State<OhlcGraph> {
   final AppController _appController = Get.find<AppController>();
   late TrackballBehavior _trackballBehavior;
+  late RxList<OhlcChartModel> currentChart;
 
   final List<String> _timeRanges = ['24H', '7D', '1M', '3M', '1Y'];
   int _selectedIndex = 0;
-
-  final Map<String, dynamic> ranges = {
-    '24H': 1,
-    '7D': 7,
-    '1M': 30,
-    '3M': 90,
-    '1Y': 365,
-  };
-
   DateFormat getXAxisDateFormat(String range) {
     switch (range) {
       case '24H':
@@ -42,7 +34,7 @@ class _OhlcGraphState extends State<OhlcGraph> {
       case '1M':
         return DateFormat.d().add_MMM();
       case '3M':
-        return DateFormat.MMMd(); // 10 Nov
+        return DateFormat.MMMd();
       case '1Y':
         return DateFormat.MMM();
       default:
@@ -53,6 +45,7 @@ class _OhlcGraphState extends State<OhlcGraph> {
   @override
   void initState() {
     super.initState();
+    currentChart = _appController.dayChart;
     _trackballBehavior = TrackballBehavior(
       enable: true,
       activationMode: ActivationMode.singleTap,
@@ -69,7 +62,7 @@ class _OhlcGraphState extends State<OhlcGraph> {
           // ---- CHART ----
           Expanded(
             child: Obx(
-              () => _appController.candleDataList.isEmpty
+              () => currentChart.isEmpty
                   ? Center(
                       child: Text(
                         'Data Loading',
@@ -87,7 +80,7 @@ class _OhlcGraphState extends State<OhlcGraph> {
                       ),
                       series: <CandleSeries>[
                         CandleSeries<OhlcChartModel, DateTime>(
-                          dataSource: _appController.candleDataList,
+                          dataSource: currentChart,
                           xValueMapper: (OhlcChartModel e, _) =>
                               DateTime.fromMillisecondsSinceEpoch(e.timestamp),
                           lowValueMapper: (OhlcChartModel e, _) => e.low,
@@ -121,12 +114,8 @@ class _OhlcGraphState extends State<OhlcGraph> {
                       ),
 
                       primaryYAxis: NumericAxis(
-                        minimum: _appController.getMinLow(
-                          _appController.candleDataList,
-                        ),
-                        maximum: _appController.getMaxHigh(
-                          _appController.candleDataList,
-                        ),
+                        minimum: _appController.getMinLow(currentChart),
+                        maximum: _appController.getMaxHigh(currentChart),
                         numberFormat: NumberFormat.simpleCurrency(
                           decimalDigits: 0,
                         ),
@@ -152,16 +141,23 @@ class _OhlcGraphState extends State<OhlcGraph> {
               itemBuilder: (context, index) {
                 final isSelected = _selectedIndex == index;
                 return GestureDetector(
-                  onTap: () async {
-                    await _appController.fetchOhlcChart(
-                      widget.coin.id,
-                      ranges[_timeRanges[index]],
-                    );
+                  onTap: () {
                     setState(() {
                       _selectedIndex = index;
+
+                      if (_selectedIndex == 0) {
+                        currentChart = _appController.dayChart;
+                      } else if (_selectedIndex == 1) {
+                        currentChart = _appController.weekChart;
+                      } else if (_selectedIndex == 2) {
+                        currentChart = _appController.monthsChart;
+                      } else if (_selectedIndex == 3) {
+                        currentChart = _appController.trimesterChart;
+                      } else if (_selectedIndex == 4) {
+                        currentChart = _appController.yearChart;
+                      }
                     });
                   },
-
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 14.w,
