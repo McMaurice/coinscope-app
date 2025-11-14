@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:coinscope_app/src/models/coins_db_entity.dart';
-import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,7 +13,7 @@ LazyDatabase _openConnection() {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File('${dbFolder.path}/coinScope.sqlite');
 
-    // Uncomment to reset DB when schema changes
+   // Uncomment to reset DB when schema changes
     // if (await file.exists()) {
     //   await file.delete();
     // }
@@ -38,8 +37,9 @@ class AppDatabase extends _$AppDatabase {
 
   // Get single coin by ID
   Future<CoinsEntityData?> getCoinById(String id) {
-    return (select(coinsEntity)..where((tbl) => tbl.id.equals(id)))
-        .getSingleOrNull();
+    return (select(
+      coinsEntity,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 
   // Batch insert or replace coins
